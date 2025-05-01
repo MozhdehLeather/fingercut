@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KK Finger Cutter</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #1E1E1E;
+      --accent: #FF6B6B;
+      --text: #F5F5F5;
+      --dim: #A0A0A0;
+      --glass: rgba(255, 255, 255, 0.1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      padding: 1rem;
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+
+    h1 {
+      text-align: center;
+      font-family: 'Space Mono', monospace;
+      font-size: clamp(1.5rem, 4vw, 1.8rem);
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+
+    #story {
+      text-align: center;
+      font-size: clamp(0.8rem, 2.5vw, 0.9rem);
+      color: var(--dim);
+      max-width: 500px;
+      margin: 0 auto 1.5rem;
+    }
+
+    .section-title {
+      text-align: center;
+      font-family: 'Space Mono', monospace;
+      font-size: clamp(0.9rem, 2.5vw, 1rem);
+      color: var(--accent);
+      margin: 1rem 0 0.5rem;
+    }
+
+    .counter {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+      gap: 0.75rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .limb {
+      background: var(--glass);
+      border: 1px solid var(--dim);
+      padding: 0.5rem;
+      text-align: center;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .limb:hover {
+      background: rgba(255, 107, 107, 0.2);
+    }
+
+    .limb:focus {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    .limb.cut {
+      background: var(--accent);
+      border-color: var(--text);
+    }
+
+    .limb img {
+      width: 40px;
+      height: auto;
+      border-radius: 4px;
+    }
+
+    .limb span {
+      display: block;
+      font-size: clamp(0.75rem, 2vw, 0.8rem);
+      color: var(--text);
+      margin-top: 0.25rem;
+    }
+
+    .progress {
+      text-align: center;
+      margin: 1.5rem auto;
+      max-width: 500px;
+    }
+
+    .progress-text {
+      font-size: clamp(0.8rem, 2.5vw, 0.9rem);
+      color: var(--dim);
+      margin-bottom: 0.5rem;
+    }
+
+    .progress-bar {
+      height: 12px;
+      width: 100%;
+      background: #333;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--accent);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    #messageBox {
+      margin-top: 0.75rem;
+      font-size: clamp(0.8rem, 2.5vw, 0.9rem);
+      color: var(--dim);
+      text-align: center;
+      min-height: 1.5rem;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .reset-button {
+      display: block;
+      margin: 1.5rem auto;
+      padding: 0.5rem 1.5rem;
+      background: var(--accent);
+      color: var(--text);
+      border: none;
+      border-radius: 6px;
+      font-family: 'Inter', sans-serif;
+      font-size: clamp(0.8rem, 2.5vw, 0.9rem);
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .reset-button:hover {
+      background: #FF8787;
+    }
+
+    .reset-button:focus {
+      outline: 2px solid var(--text);
+      outline-offset: 2px;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 600px) {
+      body {
+        padding: 0.75rem;
+      }
+
+      .counter {
+        grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+        gap: 0.5rem;
+      }
+
+      .limb img {
+        width: 35px;
+      }
+    }
+
+    @media (max-width: 400px) {
+      h1 {
+        font-size: 1.4rem;
+      }
+
+      .section-title {
+        font-size: 0.9rem;
+      }
+
+      .limb span {
+        font-size: 0.7rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>KK's Finger Cutter</h1>
+  <div id="story">ഒരു വിരൽ മുറിക്കു,  
+ഒരു ദിവസം കുറക്കു,.</div>
+
+  <div class="section-title">My Fingers - Hands</div>
+  <div class="counter" id="myHand"></div>
+  <div class="section-title">My Fingers - Legs</div>
+  <div class="counter" id="myLeg"></div>
+  <div class="section-title">Devu's Fingers - Hands</div>
+  <div class="counter" id="devuHand"></div>
+  <div class="section-title">Devu's Fingers - Legs</div>
+  <div class="counter" id="devuLeg"></div>
+
+  <div class="progress">
+    <div class="progress-text">Progress: <span id="count">0</span>/40 (<span id="percentage">0</span>%)</div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+    <div id="messageBox"></div>
+  </div>
+
+  <button class="reset-button" id="resetButton">Reset</button>
+
+  <script>
+    const imageURL = "https://i.pinimg.com/736x/02/1c/96/021c96c584d5b88dc1ba725772567cfa.jpg";
+    const sections = ["myHand", "myLeg", "devuHand", "devuLeg"];
+    const countText = document.getElementById('count');
+    const percentageText = document.getElementById('percentage');
+    const progressFill = document.getElementById('progressFill');
+    const messageBox = document.getElementById('messageBox');
+    const resetButton = document.getElementById('resetButton');
+
+    const messages = [
+      "Ouch!",
+      "One down.",
+      "Keep going.",
+      "That hurt.",
+      "Nice cut.",
+      "Oof!",
+      "Another one.",
+      "Yikes!",
+      "Almost there.",
+      "Chop chop!"
+    ];
+
+    let cutCount = 0;
+    let limbState = Array(40).fill(false);
+
+    // Load state from localStorage
+    try {
+      const savedCount = localStorage.getItem('cutCount');
+      const savedState = localStorage.getItem('limbState');
+      if (savedCount) cutCount = JSON.parse(savedCount);
+      if (savedState) limbState = JSON.parse(savedState);
+    } catch (e) {
+      console.error('Error loading state:', e);
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem('cutCount', JSON.stringify(cutCount));
+        localStorage.setItem('limbState', JSON.stringify(limbState));
+      } catch (e) {
+        console.error('Error saving state:', e);
+      }
+    }
+
+    function renderGroup(startIndex, sectionId, label) {
+      const container = document.getElementById(sectionId);
+      container.innerHTML = '';
+      for (let i = 0; i < 10; i++) {
+        const index = startIndex + i;
+        const div = document.createElement('div');
+        div.className = 'limb' + (limbState[index] ? ' cut' : '');
+        div.setAttribute('role', 'button');
+        div.setAttribute('aria-label', `Cut ${label} ${i + 1}`);
+        div.setAttribute('tabindex', '0');
+        div.innerHTML = `<img src="${imageURL}" alt="${label} ${i + 1}"><span>${label} ${i + 1}</span>`;
+        
+        const handleInteraction = () => {
+          if (!limbState[index]) {
+            limbState[index] = true;
+            cutCount++;
+            update();
+          }
+        };
+
+        div.addEventListener('click', handleInteraction);
+        div.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            handleInteraction();
+          }
+        });
+
+        container.appendChild(div);
+      }
+    }
+
+    function renderLimbs() {
+      renderGroup(0, 'myHand', 'Hand');
+      renderGroup(10, 'myLeg', 'Leg');
+      renderGroup(20, 'devuHand', "Hand");
+      renderGroup(30, 'devuLeg', "Leg");
+    }
+
+    function update() {
+      countText.textContent = cutCount;
+      percentageText.textContent = Math.round((cutCount / 40) * 100);
+      progressFill.style.width = `${(cutCount / 40) * 100}%`;
+      messageBox.style.opacity = '1';
+      messageBox.textContent = cutCount < 40 ? messages[Math.floor(Math.random() * messages.length)] : "All fingers cut!";
+
+      renderLimbs();
+      saveState();
+    }
+
+    function resetGame() {
+      cutCount = 0;
+      limbState = Array(40).fill(false);
+      messageBox.style.opacity = '0';
+      update();
+    }
+
+    resetButton.addEventListener('click', resetGame);
+
+    renderLimbs();
+    update();
+  </script>
+</body>
+</html>
